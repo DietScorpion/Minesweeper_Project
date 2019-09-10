@@ -1,3 +1,5 @@
+var flagPic;
+
 function Cell(i, j, w){
     this.i = i;
     this.j = j;
@@ -7,6 +9,17 @@ function Cell(i, j, w){
     this.neighbourCount = 0;
     this.bomb = false;
     this.revealed = false;
+    this.placeFlag = false;
+}
+
+function preload(){
+    flagPic = loadImage('Images/FlagResized.png');
+}
+
+Cell.prototype.flag = function(x, y){
+    console.log('found');
+    console.log(flagPic);
+    image(flagPic, this.x, this.y);
 }
 
 Cell.prototype.show = function() {
@@ -63,10 +76,10 @@ Cell.prototype.reveal = function(){
 }
 
 Cell.prototype.floodFill = function(){
-    for(var xoff = -1; xoff <= 1; xoff++){
-        for(var yoff = -1; yoff <= 1; yoff++){
-            var i = this.i + xoff
-            var j = this.j + yoff
+    for(var xoffset = -1; xoffset <= 1; xoffset++){
+        for(var yoffset = -1; yoffset <= 1; yoffset++){
+            var i = this.i + xoffset
+            var j = this.j + yoffset
             if(i > -1 && i < cols && j > -1 && j < rows){
                 var neighbour = grid[i][j];
                 if(!neighbour.bomb && !neighbour.revealed){
@@ -76,3 +89,4 @@ Cell.prototype.floodFill = function(){
         }
     } 
 }
+
