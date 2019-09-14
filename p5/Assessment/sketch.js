@@ -3,6 +3,7 @@ var cols;
 var rows;
 var w = 20;
 var totalBombs = 20;
+var mode = 0;
 var gameOver = false;
 
 //Creates a 2D array that contains the index of the columns and rows of the grid 
@@ -23,22 +24,31 @@ function gameover(){
     }
 }
 
-function mousePressed(){
-    background(255);  
+function mousePressed(){  
     if(mouseButton == LEFT){
-       for (var i = 0; i < cols; i++){
-           for (var j = 0; j < rows; j++){
-               if(grid[i][j].contains(mouseX, mouseY)){
-                   grid[i][j].reveal();
-                   if(grid[i][j].bomb){
-                       gameOver = true;
-                       gameover();
-                       reset();
+        if(mode == 1){
+           for (var i = 0; i < cols; i++){
+               for (var j = 0; j < rows; j++){
+                   if(grid[i][j].contains(mouseX, mouseY)){
+                       grid[i][j].reveal();
+                       if(grid[i][j].bomb){
+                           gameOver = true;
+                           gameover();
+                           reset();
+                        }
                     }
                 }
             }
         }
-    } else if(mouseButton == RIGHT){
+    }
+        if(mode == 0){
+            if(mouseX > 105 && mouseX < 220 && mouseY > 145 && mouseY < 155){
+                mode = 1;
+                background(200);
+                setup();
+        }
+    }
+    if(mouseButton == RIGHT){
         for (var i = 0; i < cols; i++){
             for (var j = 0; j < rows; j++){
                 if(grid[i][j].contains(mouseX, mouseY) && !gameOver){
@@ -50,66 +60,103 @@ function mousePressed(){
     }
     
 }
+    
 
+//Function that reads whether the enter key has been pressed
 function keyPressed(){
-    if(keyCode === 32){
-        
-    }
     if(keyCode === 13){
         setup();
        }
 }
 
 
-
+//This is an event listener that detects if the right mouse click was used
 function setup() { 
-    document.addEventListener("contextmenu", function(e){
-        e.preventDefault();
-    }, false);
     
-    createCanvas(251, 251);
-    cols = floor(width / w);
-    rows = floor(height / w);
-    grid = make2DArray(cols, rows);
-    for (var i = 0; i < cols; i++){
-        for (var j = 0; j < rows; j++){
-            grid[i][j] = new Cell(i, j, w);
-        }
-    }
+    createCanvas(351, 351);
     
-    // Pick the Placement of Bombs
-    var options = [];
-    for(var i = 0; i < cols; i++){
-         for(var j = 0; j < rows; j++){
-            options.push([i,j]);
-        }
-    }
+    if(mode == 1){
+        document.addEventListener("contextmenu", function(e){
+            e.preventDefault();
+        }, false);
     
-    //Removes an index from an the array that is taken up by a bomb
-    for(var n = 0; n < totalBombs; n++){
-        var index = floor(random(options.length));
-        var choice = options[index];
-        var i = choice[0];
-        var j = choice[1];
-        options.splice(index,1);
-        grid[i][j].bomb = true;
         
-    }
-    
-    //Discovers and Prints the Amount of Bombs Surrounding this Object
-    for (var i = 0; i < cols; i++){
-        for (var j = 0; j < rows; j++){
-            grid[i][j].neighbour();
+
+        cols = floor(250 / w);
+        rows = floor(250 / w);
+        grid = make2DArray(cols, rows);
+        for (var i = 0; i < cols; i++){
+            for (var j = 0; j < rows; j++){
+                grid[i][j] = new Cell(i, j, w);
+            }
+        }
+
+        // Pick the Placement of Bombs
+        var options = [];
+        for(var i = 0; i < cols; i++){
+             for(var j = 0; j < rows; j++){
+                options.push([i,j]);
+            }
+        }
+
+        //Removes an index from an the array that is taken up by a bomb
+        for(var n = 0; n < totalBombs; n++){
+            var index = floor(random(options.length));
+            var choice = options[index];
+            var i = choice[0];
+            var j = choice[1];
+            options.splice(index,1);
+            grid[i][j].bomb = true;
+
+        }
+
+        //Discovers and Prints the Amount of Bombs Surrounding this Object
+        for (var i = 0; i < cols; i++){
+            for (var j = 0; j < rows; j++){
+                grid[i][j].neighbour();
+            }
         }
     }
+    
+}
+
+function debugTools(){
+    background(169,169,169);
+    textSize(14);
+    text("(X ="+mouseX+", Y ="+mouseY+")", 240, 345);
+    text("Debug Tools are on!", 220, 325);
+    
 }
 
 //draws the grid of cells
 function draw(){
-   
-    for (var i = 0; i < cols; i++){
-        for (var j = 0; j < rows; j++){
-            grid[i][j].show();
+    
+    debugTools();
+    
+    if(mode == 0){
+        text("Start Minesweeper", 105, 155)
+    }
+    
+    if(mode == 1){
+        for (var i = 0; i < cols; i++){
+            for (var j = 0; j < rows; j++){
+                grid[i][j].show();
+            }
         }
+    }
+}
+
+//Chekcs if a player has won the game
+function winCondition(){
+    for (var i = 0; i < cols; i++){
+            for (var j = 0; j < rows; j++){
+                if (grid[i][j].flag){
+                    if(grid[i][j].bomb){
+                        count += 1;
+                        print(count)
+                    }
+                    
+                }
+            }
     }
 }

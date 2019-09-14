@@ -17,10 +17,14 @@ function preload(){
 }
 
 Cell.prototype.flag = function(x, y){
-    console.log('found');
-    console.log(flagPic);
+    this.placeFlag = true;
     image(flagPic, this.x, this.y);
 }
+
+//To later unflag a cell
+//Cell.prototype.Unflag = function(x, y){
+//    
+//}
 
 Cell.prototype.show = function() {
     stroke(0);
@@ -69,7 +73,9 @@ Cell.prototype.contains = function(x, y){
 }
 
 Cell.prototype.reveal = function(){
-    this.revealed = true
+    if(this.placeFlag = true){
+        this.revealed = true
+       }
     if(this.neighbourCount == 0){
         this.floodFill();
     }
@@ -82,7 +88,7 @@ Cell.prototype.floodFill = function(){
             var j = this.j + yoffset
             if(i > -1 && i < cols && j > -1 && j < rows){
                 var neighbour = grid[i][j];
-                if(!neighbour.bomb && !neighbour.revealed){
+                if(!neighbour.bomb && !neighbour.revealed ){
                    neighbour.reveal();
                    }
             }
