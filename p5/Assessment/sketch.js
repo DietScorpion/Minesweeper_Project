@@ -47,8 +47,23 @@ function mousePressed(){
                 mode = 1;
                 setup();
         }
-            if(mouseX > 105 && mouseX < 220 && mouseY > 145 && mouseY < 155){
-               
+            if(mouseX > 105 && mouseX < 111 && mouseY > 235 && mouseY < 245){
+                if(gameMode == 0){
+                    gameMode = 1;
+                    setup();
+                   } else {
+                    gameMode = 0;
+                    setup();
+                   }
+               }
+            if(mouseX > 215 && mouseX < 221 && mouseY > 235 && mouseY < 245){
+                if(gameMode == 0){
+                    gameMode = 1;
+                    setup();
+                   } else {
+                    gameMode = 0;
+                    setup();
+                   }
                }
     }
     if(mouseButton == RIGHT){
@@ -80,45 +95,49 @@ function setup() {
     textSize(14);
     
     if(mode == 1){
-        document.addEventListener("contextmenu", function(e){
-            e.preventDefault();
-        }, false);
-    
-        
+        if(gameMode == 0){
+            document.addEventListener("contextmenu", function(e){
+                e.preventDefault();
+            }, false);
 
-        cols = floor(250 / w);
-        rows = floor(250 / w);
-        grid = make2DArray(cols, rows);
-        for (var i = 0; i < cols; i++){
-            for (var j = 0; j < rows; j++){
-                grid[i][j] = new Cell(i, j, w);
+
+
+            cols = floor(250 / w);
+            rows = floor(250 / w);
+            grid = make2DArray(cols, rows);
+            for (var i = 0; i < cols; i++){
+                for (var j = 0; j < rows; j++){
+                    grid[i][j] = new Cell(i, j, w);
+                }
             }
-        }
 
-        // Pick the Placement of Bombs
-        var options = [];
-        for(var i = 0; i < cols; i++){
-             for(var j = 0; j < rows; j++){
-                options.push([i,j]);
+            // Pick the Placement of Bombs
+            var options = [];
+            for(var i = 0; i < cols; i++){
+                 for(var j = 0; j < rows; j++){
+                    options.push([i,j]);
+                }
             }
-        }
 
-        //Removes an index from an the array that is taken up by a bomb
-        for(var n = 0; n < totalBombs; n++){
-            var index = floor(random(options.length));
-            var choice = options[index];
-            var i = choice[0];
-            var j = choice[1];
-            options.splice(index,1);
-            grid[i][j].bomb = true;
+            //Removes an index from an the array that is taken up by a bomb
+            for(var n = 0; n < totalBombs; n++){
+                var index = floor(random(options.length));
+                var choice = options[index];
+                var i = choice[0];
+                var j = choice[1];
+                options.splice(index,1);
+                grid[i][j].bomb = true;
 
-        }
-
-        //Discovers and Prints the Amount of Bombs Surrounding this Object
-        for (var i = 0; i < cols; i++){
-            for (var j = 0; j < rows; j++){
-                grid[i][j].neighbour();
             }
+
+            //Discovers and Prints the Amount of Bombs Surrounding this Object
+            for (var i = 0; i < cols; i++){
+                for (var j = 0; j < rows; j++){
+                    grid[i][j].neighbour();
+                }
+            }
+        } else{
+            
         }
     }
     
@@ -135,7 +154,7 @@ function debugTools(){
 //draws the grid of cells
 function draw(){
     
-    debugTools();
+//    debugTools();
     
     if(mode == 0){
         text("Start Minesweeper", 105, 155);
