@@ -18,7 +18,7 @@ function preload(){
 
 Cell.prototype.flag = function(x, y){
     this.placeFlag = true;
-    image(flagPic, this.x, this.y);
+    image(flagPic, this.x + 50, this.y + 50);
 }
 
 //To later unflag a cell
@@ -29,18 +29,18 @@ Cell.prototype.flag = function(x, y){
 Cell.prototype.show = function() {
     stroke(0);
     noFill();
-    rect(this.x, this.y, this.w, this.w);
+    rect(this.x + 50, this.y + 50, this.w, this.w);
     if(this.revealed){
        if(this.bomb){
            fill(127);
-           ellipse(this.x + this.w * 0.5, this.y + this.w * 0.5, this.w *0.5);
+           ellipse(this.x + 50 + this.w * 0.5, this.y + 50 + this.w * 0.5, this.w *0.5);
        } else{
            fill(200);
-           rect(this.x, this.y, this.w, this.w);
+           rect(this.x + 50, this.y + 50, this.w, this.w);
            if(this.neighbourCount > 0){
               fill(0);
               textAlign(CENTER);
-              text(this.neighbourCount, this.x + this.w * 0.5, this.y + this.w - 6); 
+              text(this.neighbourCount, this.x + 50 + this.w * 0.5, this.y + 50 + this.w - 6); 
               }
            
        }
@@ -69,7 +69,7 @@ Cell.prototype.neighbour = function() {
 }
 
 Cell.prototype.contains = function(x, y){
-    return (x > this.x && x < this.x + this.w && y > this.y && y < this.y + this.w);
+    return (x > this.x + 50 && x < this.x + 50 + this.w && y > this.y + 50 && y < this.y + 50 + this.w);
 }
 
 Cell.prototype.reveal = function(){

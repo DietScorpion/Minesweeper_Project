@@ -4,6 +4,7 @@ var rows;
 var w = 20;
 var totalBombs = 20;
 var mode = 0;
+var gameMode = 0;
 var gameOver = false;
 
 //Creates a 2D array that contains the index of the columns and rows of the grid 
@@ -44,9 +45,11 @@ function mousePressed(){
         if(mode == 0){
             if(mouseX > 105 && mouseX < 220 && mouseY > 145 && mouseY < 155){
                 mode = 1;
-                background(200);
                 setup();
         }
+            if(mouseX > 105 && mouseX < 220 && mouseY > 145 && mouseY < 155){
+               
+               }
     }
     if(mouseButton == RIGHT){
         for (var i = 0; i < cols; i++){
@@ -74,6 +77,7 @@ function keyPressed(){
 function setup() { 
     
     createCanvas(351, 351);
+    textSize(14);
     
     if(mode == 1){
         document.addEventListener("contextmenu", function(e){
@@ -121,7 +125,7 @@ function setup() {
 }
 
 function debugTools(){
-    background(169,169,169);
+    background(220,220,220);
     textSize(14);
     text("(X ="+mouseX+", Y ="+mouseY+")", 240, 345);
     text("Debug Tools are on!", 220, 325);
@@ -134,7 +138,16 @@ function draw(){
     debugTools();
     
     if(mode == 0){
-        text("Start Minesweeper", 105, 155)
+        text("Start Minesweeper", 105, 155);
+        text("<", 105, 245);
+        text(">", 215, 245);
+        if(gameMode == 0){
+           text("Square", 140, 245);
+           }
+        if(gameMode == 1){
+           text("Hexagon",140, 245);
+           }
+            
     }
     
     if(mode == 1){
