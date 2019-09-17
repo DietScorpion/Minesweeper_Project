@@ -4,7 +4,7 @@ var rows;
 var w = 20;
 var totalBombs = 10;
 var flagCount = 10;
-var mode = 0;
+var mode = 3;
 var gameMode = 0;
 var gameOver = false;
 var winCount;
@@ -42,7 +42,21 @@ function mousePressed(){
                 }
             }
         }
-    }
+        
+        if(mode == 2){
+            if(mouseX > 115 && mouseX < 225 && mouseY > 225 && mouseY < 235){
+                mode = 0;
+                setup();
+            }
+        }
+        
+        if(mode == 3){
+            if(mouseX > 115 && mouseX < 225 && mouseY > 225 && mouseY < 235){
+                mode = 0;
+                setup();
+            }
+        }
+    
         if(mode == 0){
             if(mouseX > 105 && mouseX < 220 && mouseY > 145 && mouseY < 155){
                 mode = 1;
@@ -66,6 +80,8 @@ function mousePressed(){
                     setup();
                    }
                }
+        }
+
     }
     if(mouseButton == RIGHT){
         for (var i = 0; i < cols; i++){
@@ -143,15 +159,22 @@ function setup() {
     } else if(mode == 2){
         background(160, 160, 160);
         textSize(24);
-        text("You Win!", 105, 155);
+        text("You Win!", 115, 155);
         textSize(14);
         text("Back to Main Menu", 105, 235);
               }
+    else if(mode == 3){
+        background(160, 160, 160);
+        textSize(24);
+        text("You Lose!", 115, 155);
+        textSize(14);
+        text("Back to Main Menu", 115, 235);
+            }
     
 }
 
 function debugTools(){
-
+    background(160, 160, 160);
     textSize(14);
     text("(X ="+mouseX+", Y ="+mouseY+")", 240, 345);
     text("Debug Tools are on!", 220, 325);
@@ -162,6 +185,8 @@ function debugTools(){
 function draw(){
     
 //    debugTools();
+    
+        
     
     if(mode == 0){
         text("Start Minesweeper", 105, 155);
@@ -206,6 +231,7 @@ function winCondition(){
         }else if(winCount !== totalBombs){
            console.log("triggered GameOver")
            gameover();
+            setTimeout(lose, 3000);
 
        }
     } 
@@ -213,5 +239,10 @@ function winCondition(){
 
 function win(){
     mode = 2;
+    setup();
+}
+
+function lose(){
+    mode = 3;
     setup();
 }
