@@ -6,6 +6,7 @@ function Cell2(i, j, w){
     this.x = i * w;
     this.y = j * w;
     this.w = w;
+    this.npoints = 6;
     this.neighbourCount = 0;
     this.bomb = false;
     this.revealed = false;
@@ -21,6 +22,41 @@ function Cell2(i, j, w){
 //    image(flagPic, this.x + 50, this.y + 50);
 //}
 //
+
+function polygon(x, y, w, npoints) {
+    var angle = TWO_PI / npoints;
+    beginShape();
+    for (var a = 0; a < TWO_PI; a += angle) {
+        var sx = x + cos(a) * w;
+        var sy = y + sin(a) * w;
+        vertex(sx, sy);
+    }
+    endShape(CLOSE);
+}
+
+Cell2.prototype.show = function(){
+    stroke(0);
+    noFill();
+    polygon(this.x + 50, this.y + 50, this.w * 0.5, this.npoints);
+    if(this.revealed){
+       if(this.bomb){
+           fill(127);
+           ellipse(this.x + 50 + this.w * 0.5, this.y + 50 + this.w * 0.5, this.w *0.5);
+       } else{
+           fill(200);
+           polygon(this.x + 50, this.y + 50, this.w * 0.5, this.npoints);
+//           if(this.neighbourCount > 0){
+//              fill(0);
+//              textAlign(CENTER);
+//              text(this.neighbourCount, this.x + 50 + this.w * 0.5, this.y + 50 + this.w - 6); 
+//              }
+           
+       }
+    }
+}
+
+
+
 //Cell.prototype.show = function() {
 //    stroke(0);
 //    noFill();

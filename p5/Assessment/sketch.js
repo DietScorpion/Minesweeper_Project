@@ -4,8 +4,8 @@ var rows;
 var w = 20;
 var totalBombs = 10;
 var flagCount = 10;
-var mode = 3;
-var gameMode = 0;
+var mode = 1;
+var gameMode = 1;
 var gameOver = false;
 var winCount;
 
@@ -155,6 +155,14 @@ function setup() {
             }
         } else{
             
+            cols = floor(140 / w);
+            rows = floor(140 / w);
+            grid = make2DArray(cols, rows);
+            for (var i = 0; i < cols; i++){
+                for (var j = 0; j < rows; j++){
+                    grid[i][j] = new Cell2(i, j, w);
+                }
+            }
         }
     } else if(mode == 2){
         background(160, 160, 160);
