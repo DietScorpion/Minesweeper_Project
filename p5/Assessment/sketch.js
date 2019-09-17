@@ -2,10 +2,12 @@ var grid;
 var cols;
 var rows;
 var w = 20;
-var totalBombs = 20;
+var totalBombs = 10;
+var flagCount = 10;
 var mode = 0;
 var gameMode = 0;
 var gameOver = false;
+var winCount;
 
 //Creates a 2D array that contains the index of the columns and rows of the grid 
 function make2DArray(cols, rows){
@@ -35,7 +37,6 @@ function mousePressed(){
                        if(grid[i][j].bomb){
                            gameOver = true;
                            gameover();
-                           reset();
                         }
                     }
                 }
@@ -70,8 +71,10 @@ function mousePressed(){
         for (var i = 0; i < cols; i++){
             for (var j = 0; j < rows; j++){
                 if(grid[i][j].contains(mouseX, mouseY) && !gameOver){
-                    grid[i][j].checked = true;
-                    grid[i][j].flag();
+                    grid[i][j].placeFlag();
+                    winCondition();
+                    flagCount -= 1;
+                    console.log("flag count ="+flagCount);
                 }
             }
         }
@@ -83,6 +86,7 @@ function mousePressed(){
 //Function that reads whether the enter key has been pressed
 function keyPressed(){
     if(keyCode === 13){
+        mode = 0;
         setup();
        }
 }
@@ -90,18 +94,15 @@ function keyPressed(){
 
 //This is an event listener that detects if the right mouse click was used
 function setup() { 
-    
     createCanvas(351, 351);
+    background(160,160,160);
     textSize(14);
-    
     if(mode == 1){
         if(gameMode == 0){
             document.addEventListener("contextmenu", function(e){
                 e.preventDefault();
             }, false);
-
-
-
+            
             cols = floor(250 / w);
             rows = floor(250 / w);
             grid = make2DArray(cols, rows);
@@ -139,12 +140,18 @@ function setup() {
         } else{
             
         }
-    }
+    } else if(mode == 2){
+        background(160, 160, 160);
+        textSize(24);
+        text("You Win!", 105, 155);
+        textSize(14);
+        text("Back to Main Menu", 105, 235);
+              }
     
 }
 
 function debugTools(){
-    background(220,220,220);
+
     textSize(14);
     text("(X ="+mouseX+", Y ="+mouseY+")", 240, 345);
     text("Debug Tools are on!", 220, 325);
@@ -180,15 +187,31 @@ function draw(){
 
 //Chekcs if a player has won the game
 function winCondition(){
+    winCount = 0;
     for (var i = 0; i < cols; i++){
-            for (var j = 0; j < rows; j++){
-                if (grid[i][j].flag){
-                    if(grid[i][j].bomb){
-                        count += 1;
-                        print(count)
-                    }
-                    
+        for (var j = 0; j < rows; j++){
+            if (grid[i][j].flag == true){
+                if(grid[i][j].bomb){
+                    winCount += 1;
+                    console.log("win count ="+winCount);
                 }
-            }
+
+            } 
+        }
     }
+    if(flagCount == 1){
+       if(winCount == totalBombs){
+           console.log("triggered Win")
+            win();
+        }else if(winCount !== totalBombs){
+           console.log("triggered GameOver")
+           gameover();
+
+       }
+    } 
+}
+
+function win(){
+    mode = 2;
+    setup();
 }

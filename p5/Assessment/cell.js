@@ -9,22 +9,19 @@ function Cell(i, j, w){
     this.neighbourCount = 0;
     this.bomb = false;
     this.revealed = false;
-    this.placeFlag = false;
+    this.flag = false;
 }
 
 function preload(){
     flagPic = loadImage('Images/FlagResized.png');
 }
 
-Cell.prototype.flag = function(x, y){
-    this.placeFlag = true;
-    image(flagPic, this.x + 50, this.y + 50);
+Cell.prototype.placeFlag = function(x, y){
+    
+    flag = image(flagPic, this.x + 50, this.y + 50);
+    this.flag = true;
+    console.log("Flag Active");
 }
-
-//To later unflag a cell
-//Cell.prototype.Unflag = function(x, y){
-//    
-//}
 
 Cell.prototype.show = function() {
     stroke(0);
@@ -73,7 +70,7 @@ Cell.prototype.contains = function(x, y){
 }
 
 Cell.prototype.reveal = function(){
-    if(this.placeFlag = true){
+    if(this.placeFlag){
         this.revealed = true
        }
     if(this.neighbourCount == 0){
