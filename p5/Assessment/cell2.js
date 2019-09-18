@@ -29,7 +29,7 @@ function polygon(x, y, w, npoints) {
     for (var a = 0; a < TWO_PI; a += angle) {
         var sx = x + cos(a) * w;
         var sy = y + sin(a) * w;
-        vertex(sx, sy);
+        vertex(sy, sx);
     }
     endShape(CLOSE);
 }
@@ -37,6 +37,7 @@ function polygon(x, y, w, npoints) {
 Cell2.prototype.show = function(){
     stroke(0);
     noFill();
+    
     polygon(this.x + 50, this.y + 50, this.w * 0.5, this.npoints);
     if(this.revealed){
        if(this.bomb){

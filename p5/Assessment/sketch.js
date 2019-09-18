@@ -8,6 +8,7 @@ var mode = 1;
 var gameMode = 1;
 var gameOver = false;
 var winCount;
+var alt = false;
 
 //Creates a 2D array that contains the index of the columns and rows of the grid 
 function make2DArray(cols, rows){
@@ -155,13 +156,22 @@ function setup() {
             }
         } else{
             
-            cols = floor(140 / w);
-            rows = floor(140 / w);
+            cols = floor(200 / w);
+            rows = floor(200 / w);
             grid = make2DArray(cols, rows);
             for (var i = 0; i < cols; i++){
-                for (var j = 0; j < rows; j++){
-                    grid[i][j] = new Cell2(i, j, w);
+                if(!alt){
+                   for (var j = 0; j < rows; j++){
+                        grid[i][j] = new Cell2(i + 1.2, j, w);
+                   }
+                    alt = true;
+                }else{
+                    for (var j = 0; j < rows; j++){
+                        grid[i][j] = new Cell2(i + 0.2, j + 0.5, w);
+                   }
+                    alt = false;
                 }
+                
             }
         }
     } else if(mode == 2){
