@@ -1,6 +1,9 @@
 var grid;
 var cols;
 var rows;
+var grid2;
+var cols2;
+var rows2;
 var w = 20;
 var totalBombs = 10;
 var flagCount = 10;
@@ -19,6 +22,15 @@ function make2DArray(cols, rows){
     return arr;
 } 
 
+//Creates a 2D array that contains the index of the columns and rows of the grid but for the Hexagon Framework
+function make2DArray2(cols2, rows2){
+    var arr = new Array(cols2);
+    for (var i = 0; i < arr.length; i++){
+        arr[i] = new Array(rows2);
+    }
+    return arr;
+} 
+
 //Detects whether a mouse clicked on a bomb
 function gameover(){
     for (var i = 0; i < cols; i++){
@@ -31,17 +43,33 @@ function gameover(){
 function mousePressed(){  
     if(mouseButton == LEFT){
         if(mode == 1){
-           for (var i = 0; i < cols; i++){
-               for (var j = 0; j < rows; j++){
-                   if(grid[i][j].contains(mouseX, mouseY)){
-                       grid[i][j].reveal();
-                       if(grid[i][j].bomb){
-                           gameOver = true;
-                           gameover();
+            if(gameMode == 0){
+               for (var i = 0; i < cols; i++){
+                   for (var j = 0; j < rows; j++){
+                       if(grid[i][j].contains(mouseX, mouseY)){
+                           grid[i][j].reveal();
+                           if(grid[i][j].bomb){
+                               gameOver = true;
+                               gameover();
+                            }
                         }
                     }
                 }
+            } else if(gameMode == 1){
+                for (var i = 0; i < cols2; i++){
+                   for (var j = 0; j < rows2; j++){
+                       if(grid2[i][j].clicked(mouseX, mouseY)){
+                           grid2[i][j].reveal();
+                           if(grid2[i][j].bomb){
+                               gameOver = true;
+                               gameover();
+                            }
+                        }
+                    }
+                }
+                      
             }
+           
         }
         
         if(mode == 2){
@@ -156,22 +184,48 @@ function setup() {
             }
         } else{
             
-            cols = floor(200 / w);
-            rows = floor(200 / w);
-            grid = make2DArray(cols, rows);
-            for (var i = 0; i < cols; i++){
+            cols2 = floor(250 / w);
+            rows2 = floor(250 / w);
+            grid2 = make2DArray2(cols2, rows2);
+            for (var i = 0; i < cols2; i++){
                 if(!alt){
-                   for (var j = 0; j < rows; j++){
-                        grid[i][j] = new Cell2(i + 1.2, j, w);
+                   for (var j = 0; j < rows2; j++){
+                        grid2[i][j] = new Cell2(i , j, w);
                    }
                     alt = true;
                 }else{
-                    for (var j = 0; j < rows; j++){
-                        grid[i][j] = new Cell2(i + 0.2, j + 0.5, w);
+                    for (var j = 0; j < rows2; j++){
+                        grid2[i][j] = new Cell2(i , j + 0.5, w);
                    }
                     alt = false;
                 }
                 
+            }
+            
+            console.log(grid2);
+            // Pick the Placement of Bombs
+            var options = [];
+            for(var i = 0; i < cols2; i++){
+                 for(var j = 0; j < rows2; j++){
+                    options.push([i,j]);
+                }
+            }
+            //Removes an index from an the array that is taken up by a bomb
+            for(var n = 0; n < totalBombs; n++){
+                var index = floor(random(options.length));
+                var choice = options[index];
+                var i = choice[0];
+                var j = choice[1];
+                options.splice(index,1);
+                grid2[i][j].bomb = true;
+
+            }
+            
+            //Discovers and Prints the Amount of Bombs Surrounding this Object
+            for (var i = 0; i < cols2; i++){
+                for (var j = 0; j < rows2; j++){
+//                    grid2[i][j].neighbour();
+                }
             }
         }
     } else if(mode == 2){
@@ -220,11 +274,20 @@ function draw(){
     }
     
     if(mode == 1){
-        for (var i = 0; i < cols; i++){
-            for (var j = 0; j < rows; j++){
-                grid[i][j].show();
+        if(gameMode == 0){
+            for (var i = 0; i < cols; i++){
+                for (var j = 0; j < rows; j++){
+                    grid[i][j].show();
+                }
+            }
+        } else if(gameMode == 1) {
+            for (var i = 0; i < cols2; i++){
+                for (var j = 0; j < rows2; j++){
+                    grid2[i][j].show();
+                }
             }
         }
+        
     }
 }
 
