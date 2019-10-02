@@ -5,10 +5,10 @@ var grid2;
 var cols2;
 var rows2;
 var w = 20;
-var totalBombs = 10;
+var totalBombs = 20;
 var flagCount = 10;
-var mode = 1;
-var gameMode = 1;
+var mode = 0;
+var gameMode = 0;
 var gameOver = false;
 var winCount;
 var alt = false;
@@ -38,6 +38,11 @@ function gameover(){
             grid[i][j].reveal();
         }
     }
+    for (var i = 0; i < cols; i++){
+        for (var j = 0; j < rows; j++){
+            grid2[i][j].reveal();
+        }
+    }
 }
 
 function mousePressed(){  
@@ -51,11 +56,13 @@ function mousePressed(){
                            if(grid[i][j].bomb){
                                gameOver = true;
                                gameover();
+                               setTimeout(lose, 3000);
                             }
                         }
                     }
                 }
-            } else if(gameMode == 1){
+            }
+            if(gameMode == 1){
                 for (var i = 0; i < cols2; i++){
                    for (var j = 0; j < rows2; j++){
                        if(grid2[i][j].clicked(mouseX, mouseY)){
@@ -63,6 +70,7 @@ function mousePressed(){
                            if(grid2[i][j].bomb){
                                gameOver = true;
                                gameover();
+                               setTimeout(lose, 3000);
                             }
                         }
                     }
@@ -224,7 +232,7 @@ function setup() {
             //Discovers and Prints the Amount of Bombs Surrounding this Object
             for (var i = 0; i < cols2; i++){
                 for (var j = 0; j < rows2; j++){
-//                    grid2[i][j].neighbour();
+                    grid2[i][j].neighbour();
                 }
             }
         }

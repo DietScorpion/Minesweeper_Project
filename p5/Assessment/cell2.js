@@ -56,11 +56,20 @@ Cell2.prototype.show = function(){
     }
 }
 
-Cell2.prototype.clicked = function(x, y){
-    var d = dist(mouseX, mouseY, this.x + 50, this.y + 50);
-    if(d < 10){
-        return true;
+Cell2.prototype.clicked = function(x, y){    
+    d = dist(mouseX, mouseY, this.x + 50, this.y + 50);
+    if(d < 10 && this.bomb){
+        this.gameOver;
        }
+    if(d < 10){
+       return true;
+       }
+}
+
+Cell2.prototype.gameOver = function(){
+    for(var i = 0; i < grid2.length; i++){
+        console.log("beep");
+    }
 }
 
 Cell2.prototype.neighbour = function() {
@@ -69,46 +78,97 @@ Cell2.prototype.neighbour = function() {
         this.neighbourCount = -1
     }
     var total = 0;
-    for(var xoff = -1; xoff <= 1; xoff++){
-        if(xoff == -1){
-            
-            var i = this.i + xoff;
-            var j = this.j;
-            
-            if(i > -1 && i < cols2 && j > -1 && j < rows2){
-                var neighbourCount = grid2[i][j];
-                console.log(grid2[i][j])
-                if(neighbourCount.bomb){
-                    total++;
+    if(floor(this.i) % 2 == 1){
+        for(var xoff = -1; xoff <= 1; xoff++){
+            if(xoff == -1){
+                for(var yoff = 0; yoff <= 1; yoff++){
+                    var i = this.i + xoff;
+                    var j = floor(this.j) + yoff;
+
+                    if(i > -1 && i < cols2 && j > -1 && j < rows2){
+                        var neighbourCount = grid2[i][j];
+
+                        if(neighbourCount.bomb){
+                            total++;
+                        }
+                    }
                 }
             }
-        }
-        if(xoff == 0){
-            for(var yoff = -1; yoff <= 1; yoff++){
-            var i = this.i + xoff
-            var j = this.j + yoff
-            if(i > -1 && i < cols2 && j > -1 && j < rows2){
-                var neighbourCount = grid2[i][j];
-                
-                if(neighbourCount.bomb){
-                    total++;
+
+            if(xoff == 0){
+                for(var yoff = -1; yoff <= 1; yoff++){
+                    var i = this.i + xoff
+                    var j = floor(this.j) + yoff
+
+                    if(i > -1 && i < cols2 && j > -1 && j < rows2){
+                        var neighbourCount = grid2[i][j];
+
+                        if(neighbourCount.bomb){
+                            total++;
+                        }
+                    }
                 }
             }
-        }
-        }
-        if(xoff == 1){
-            for(var yoff = -1; yoff <= 1; yoff++){
-            var i = this.i + xoff
-            var j = this.j + yoff
-            if(i > -1 && i < cols2 && j > -1 && j < rows2){
-                var neighbourCount = grid2[i][j];
-                if(neighbourCount.bomb){
-                    total++;
+            if(xoff == 1){
+                for(var yoff = 0; yoff <= 1; yoff++){
+                    var i = this.i + xoff
+                    var j = floor(this.j) + yoff
+                    if(i > -1 && i < cols2 && j > -1 && j < rows2){
+                        var neighbourCount = grid2[i][j];
+                        if(neighbourCount.bomb){
+                            total++;
+                        }
+                    }
                 }
             }
+
         }
+    }
+    if(floor(this.i) % 2 == 0){
+        for(var xoff = -1; xoff <= 1; xoff++){
+            if(xoff == -1){
+                for(var yoff = -1; yoff <= 0; yoff++){
+                    var i = this.i + xoff;
+                    var j = floor(this.j) + yoff;
+
+                    if(i > -1 && i < cols2 && j > -1 && j < rows2){
+                        var neighbourCount = grid2[i][j];
+
+                        if(neighbourCount.bomb){
+                            total++;
+                        }
+                    }
+                }
+            }
+
+            if(xoff == 0){
+                for(var yoff = -1; yoff <= 1; yoff++){
+                    var i = this.i + xoff
+                    var j = floor(this.j) + yoff
+
+                    if(i > -1 && i < cols2 && j > -1 && j < rows2){
+                        var neighbourCount = grid2[i][j];
+
+                        if(neighbourCount.bomb){
+                            total++;
+                        }
+                    }
+                }
+            }
+            if(xoff == 1){
+                for(var yoff = -1; yoff <= 0; yoff++){
+                    var i = this.i + xoff
+                    var j = floor(this.j) + yoff
+                    if(i > -1 && i < cols2 && j > -1 && j < rows2){
+                        var neighbourCount = grid2[i][j];
+                        if(neighbourCount.bomb){
+                            total++;
+                        }
+                    }
+                }
+            }
+
         }
-        
     }
     this.neighbourCount = total;
 }
@@ -130,7 +190,7 @@ Cell2.prototype.floodFill = function(){
     for(var xoffset = -1; xoffset <= 1; xoffset++){
         for(var yoffset = -1; yoffset <= 1; yoffset++){
             var i = this.i + xoffset
-            var j = this.j + yoffset
+            var j = floor(this.j) + yoffset
             if(i > -1 && i < cols2 && j > -1 && j < rows2){
                 var neighbour = grid2[i][j];
                 if(!neighbour.bomb && !neighbour.revealed ){
