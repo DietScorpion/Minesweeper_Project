@@ -17,9 +17,8 @@ function preload(){
     flagPic = loadImage('Images/Hexagonal Flag (borderless).png');
 }
 
-Cell2.prototype.placeFlag = function(x, y){
-    
-    flag = image(flagPic, this.x + 50, this.y + 50);
+Cell2.prototype.flag = function(x, y){
+    flag = image(flagPic, this.x + 40, this.y + 40);
     this.flag = true;
     console.log("Flag Active");
 }
@@ -123,7 +122,6 @@ Cell2.prototype.neighbour = function() {
                     }
                 }
             }
-
         }
     }
     if(floor(this.i) % 2 == 0){

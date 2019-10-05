@@ -16,7 +16,7 @@ function preload(){
     flagPic = loadImage('Images/FlagResized.png');
 }
 
-Cell.prototype.placeFlag = function(x, y){
+Cell.prototype.placeFlag = function(){
     
     flag = image(flagPic, this.x + 50, this.y + 50);
     this.flag = true;

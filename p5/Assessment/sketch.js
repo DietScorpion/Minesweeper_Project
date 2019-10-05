@@ -5,15 +5,17 @@ var grid2;
 var cols2;
 var rows2;
 var w = 20;
-var totalBombs = 20;
-var flagCount = 10;
-var mode = 1;
+var totalBombs = 10;
+var flagCount = totalBombs;
+var mode = 0;
 var gameMode = 0;
 var gameOver = false;
 var winCount;
 var alt = false;
 var timerCount = 0;
 var highscore = 1000000;
+var clock;
+var clock2;
 
 //Creates a 2D array that contains the index of the columns and rows of the grid 
 function make2DArray(cols, rows){
@@ -121,26 +123,29 @@ function mousePressed(){
 
     }
     if(mouseButton == RIGHT){
-        for (var i = 0; i < cols; i++){
-            for (var j = 0; j < rows; j++){
-                if(grid[i][j].contains(mouseX, mouseY) && !gameOver){
-                    drawFlags(grid[i][j]);
-                    winCondition();
-                    flagCount -= 1;
+        if(gameMode == 0){
+            for (var i = 0; i < cols; i++){
+                for (var j = 0; j < rows; j++){
+                    if(grid[i][j].contains(mouseX, mouseY) && !gameOver){
+                        grid[i][j].placeFlag();
+                        winCondition();
+                        flagCount -= 1;
+                    }
                 }
             }
-        }
-        for (var i = 0; i < cols2; i++){
-            for (var j = 0; j < rows2; j++){
-                if(grid2[i][j].contains(mouseX, mouseY) && !gameOver){
-                    grid2[i][j].placeFlag();
-                    winCondition();
-                    flagCount -= 1;
+        } else if(gameMode == 1){
+           for (var i = 0; i < cols2; i++){
+                for (var j = 0; j < rows2; j++){
+                    if(grid2[i][j].contains(mouseX, mouseY) && !gameOver){
+                        grid2[i][j].flag();
+                        winCondition();
+                        flagCount -= 1;
+                        console.log(flagCount);
+                    }
                 }
-            }
+            } 
         }
     }
-    
 }
     
 
@@ -201,6 +206,9 @@ function setup() {
                 }
             }
         } else{
+            document.addEventListener("contextmenu", function(e){
+                e.preventDefault();
+            }, false);
             clock2 = setInterval(timer, 1000);
             cols2 = floor(250 / w);
             rows2 = floor(250 / w);
@@ -245,20 +253,7 @@ function setup() {
                 }
             }
         }
-    } else if(mode == 2){
-        background(160, 160, 160);
-        textSize(24);
-        text("You Win!", 115, 155);
-        textSize(14);
-        text("Back to Main Menu", 105, 235);
-              }
-    else if(mode == 3){
-        background(160, 160, 160);
-        textSize(24);
-        text("You Lose!", 115, 155);
-        textSize(14);
-        text("Back to Main Menu", 115, 235);
-            }
+    } 
     
 }
 
@@ -272,19 +267,34 @@ function debugTools(){
 
 //draws the grid of cells
 function draw(){
-//    debugTools();
     ScreenMode();
-    drawFlags();
+    backToMenu();
 }
 
 function timer(){
-    
     timerCount += 1;
-    
+}
+
+function backToMenu(){
+    if(mode == 2){
+        background(160, 160, 160);
+        textSize(24);
+        text("You Win!", 115, 155);
+        textSize(14);
+        text("Highscore: "+highscore+" seconds", 95, 200);
+        text("Back to Main Menu", 105, 235);
+              }
+    else if(mode == 3){
+        background(160, 160, 160);
+        textSize(24);
+        text("You Lose!", 115, 155);
+        textSize(14);
+        text("Back to Main Menu", 115, 235);
+            }
 }
 
 function ScreenMode(){
-    background(160, 160, 160);
+//    background(160, 160, 160);
     if(mode == 0){
         text("Start Minesweeper", 105, 155);
         text("<", 105, 245);
@@ -299,11 +309,6 @@ function ScreenMode(){
     }
     
     if(mode == 1){
-        line(0, 30, 350, 30);
-        text("Timer : ", 260, 25);
-        text(timerCount, 320, 25);
-        text("Flags : "+flagCount, 20, 25)
-        
         if(gameMode == 0){
             for (var i = 0; i < cols; i++){
                 for (var j = 0; j < rows; j++){
@@ -319,70 +324,69 @@ function ScreenMode(){
         }
         
     }
-    if(mode == 2){
-        background(160, 160, 160);
-        textSize(24);
-        text("You Win!", 115, 155);
-        textSize(14);
-        text("Highscore: "+highscore+" seconds", 95, 200);
-        text("Back to Main Menu", 105, 235);
-              }
-    if(mode == 3){
-        background(160, 160, 160);
-        textSize(24);
-        text("You Lose!", 115, 155);
-        textSize(14);
-        text("Back to Main Menu", 115, 235);
-    }
+    highScoreTime();
 }
 
 //Chekcs if a player has won the game
 function winCondition(){
     winCount = 0;
-    for (var i = 0; i < cols; i++){
-        for (var j = 0; j < rows; j++){
-            if (grid[i][j].flag == true){
-                if(grid[i][j].bomb){
-                    winCount += 1;
-                }
+    if(gameMode == 0){
+        for (var i = 0; i < cols; i++){
+            for (var j = 0; j < rows; j++){
+                if (grid[i][j].flag == true){
+                    if(grid[i][j].bomb){
+                        winCount += 1;
+                    }
 
-            } 
+                } 
+            }
+        }
+    }else if(gameMode == 1){
+        for (var i = 0; i < cols2; i++){
+            for (var j = 0; j < rows2; j++){
+                if (grid2[i][j].flag == true){
+                    if(grid2[i][j].bomb){
+                        winCount += 1;
+                    }
+
+                } 
+            }
         }
     }
+    
     if(flagCount == 1){
        if(winCount == totalBombs){
             win();
         }else if(winCount !== totalBombs){
            gameover();
             setTimeout(lose, 3000);
-
+            
        }
     } 
 }
 
-function drawFlags(location){
-    if (gameMode == 0){
-        location.placeFlag();
+function highScoreTime(){
+    if(mode == 2){
+        text("Highscore: "+highscore+" seconds", 95, 200);
+        backToMenu();
     }
-    if (gameMode == 0){
-        location.placeFlag();
-    }
-    
 }
 
 function win(){
     mode = 2;
-    setup();
     clearInterval(clock);
+    clearInterval(clock2);
     if(timerCount < highscore){
-        highscore = timerCount
+        highscore = timerCount;
     }
     timerCount = 0;
+    setup();
 }
 
 function lose(){
     mode = 3;
-    setup();
     clearInterval(clock);
+    clearInterval(clock2);
     timerCount = 0;
+    setup();
 }
