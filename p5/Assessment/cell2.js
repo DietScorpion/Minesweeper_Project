@@ -14,12 +14,14 @@ function Cell2(i, j, w){
 }
 
 function preload(){
-    flagPic = loadImage('Images/FlagResized.png');
+    flagPic = loadImage('Images/Hexagonal Flag (borderless).png');
 }
 
-Cell2.prototype.flag = function(x, y){
-    this.placeFlag = true;
-    image(flagPic, this.x + 50, this.y + 50);
+Cell2.prototype.placeFlag = function(x, y){
+    
+    flag = image(flagPic, this.x + 50, this.y + 50);
+    this.flag = true;
+    console.log("Flag Active");
 }
 
 
@@ -56,19 +58,19 @@ Cell2.prototype.show = function(){
     }
 }
 
-Cell2.prototype.clicked = function(x, y){    
+
+
+Cell2.prototype.clickedBomb = function(x, y){    
     d = dist(mouseX, mouseY, this.x + 50, this.y + 50);
     if(d < 10 && this.bomb){
-        this.gameOver;
-       }
-    if(d < 10){
-       return true;
-       }
+        return true;
+    }
 }
 
-Cell2.prototype.gameOver = function(){
-    for(var i = 0; i < grid2.length; i++){
-        console.log("beep");
+Cell2.prototype.clicked = function(x, y){    
+    r = dist(mouseX, mouseY, this.x + 50, this.y + 50);
+    if(r < 10){
+        return true;
     }
 }
 
@@ -174,13 +176,15 @@ Cell2.prototype.neighbour = function() {
 }
 
 Cell2.prototype.contains = function(x, y){
-    return (x > this.x + 50 && x < this.x + 50 + this.w * 0.5 && y > this.y + 50 && y < this.y + 50 + this.w * 0.5);
+    d = dist(mouseX, mouseY, this.x + 50, this.y + 50);
+    if(d < 10){
+        return true;
+    }
 }
 
 Cell2.prototype.reveal = function(){
-    if(this.placeFlag = true){
-        this.revealed = true
-       }
+    this.revealed = true
+       
     if(this.neighbourCount == 0){
         this.floodFill();
     }
